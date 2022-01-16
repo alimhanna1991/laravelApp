@@ -27,7 +27,7 @@
                         </header>
 
                         <div class="text-sm mt-4">
-                            {{$post->excerpt}}
+                            {!! $post->excerpt !!}
 
 
                         </div>
