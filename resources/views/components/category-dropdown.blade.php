@@ -21,7 +21,7 @@
         </x-dropdown-item>
          @foreach ($categories as $category)
          <x-dropdown-item
-          href="/?category={{$category->slug}}"
+          href="/?category={{$category->slug}}&{{http_build_query(request()->except('category'))}}"
           :active="request()->is('categories/{$category->slug}')"
           >
              {{$category->name}}
