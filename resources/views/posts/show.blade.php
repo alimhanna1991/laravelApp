@@ -1,4 +1,5 @@
 
+
 <x-layout>
     <section class="px-6 py-8">
 
@@ -51,34 +52,46 @@
                        {{$post->body}}
                     </div>
                 </div>
+                <section class="col-span-8 col-start-5 mt-10 space-y-6">
+                @auth
+                <form action="/posts/{{$post->slug}}/comments" method="post" class="border rounded-xl border-gray-200">
+                    @csrf
+                    <header class="flex items-center">
+                        <img src="https://i.pravatar.cc/200?id={{ auth()->id() }}" width="100" height="100" class="rounded-full">
+                        <h2 class="ml-3">Want to paricipate ?</h2>
+                    </header>
+                    <div class="mt-6">
+                        <textarea name="body"
+                         class="w-full focus:outline-none focus:ring" id=""
+                          cols="30" rows="10" placeholder="Type Here" required></textarea>
+                    </div>
+                    @error('body')
+                        <span class="text-xs text-red-500">
+                            {{$message}}
+                        </span>
+
+                    @enderror
+                    <div class="flex justify-end mt-6 border-t border-gray-200 pt-6">
+                        <button class="text-whit bg-blue-500 uppercae font-semibold text-xs rounded-2xl py-2 px-10 hover:bg-blue-600" type="submit">Submit</button>
+                    </div>
+                </form>
+                @else
+                    <p>
+                        <a href="/login"> Login to Comment</a>
+                    </p>
+                @endauth
+
+
+                    @foreach ($post->comments as  $comment)
+                    <x-post-comment :comment="$comment" />
+
+                    @endforeach
+
+                </section>
             </article>
         </main>
 
-        <footer class="bg-gray-100 border border-black border-opacity-5 rounded-xl text-center py-16 px-10 mt-16">
-            <img src="/images/lary-newsletter-icon.svg" alt="" class="mx-auto -mb-6" style="width: 145px;">
-            <h5 class="text-3xl">Stay in touch with the latest posts</h5>
-            <p class="text-sm">Promise to keep the inbox clean. No bugs.</p>
 
-            <div class="mt-10">
-                <div class="relative inline-block mx-auto lg:bg-gray-200 rounded-full">
-                    <form method="POST" action="#" class="lg:flex text-sm">
-                        <div class="lg:py-3 lg:px-5 flex items-center">
-                            <label for="email" class="hidden lg:inline-block">
-                                <img src="/images/mailbox-icon.svg" alt="mailbox letter">
-                            </label>
-
-                            <input id="email" type="text" placeholder="Your email address"
-                                class="lg:bg-transparent pl-4 focus-within:outline-none">
-                        </div>
-
-                        <button type="submit"
-                            class="transition-colors duration-300 bg-blue-500 hover:bg-blue-600 mt-4 lg:mt-0 lg:ml-3 rounded-full text-xs font-semibold text-white uppercase py-3 px-8">
-                            Subscribe
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </footer>
     </section>
 </x-layout>
 
