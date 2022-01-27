@@ -18,6 +18,31 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::post('newsletter',function(){
+    request()->validate([
+        'email'=>'required|email'
+    ]);
+    $mailchimp = new \MailchimpMarketing\ApiClient();
+
+$mailchimp->setConfig([
+	'apiKey' => config('services.mailchimp.key'),
+	'server' => 'us14'
+]);
+try{
+    $response = $mailchimp->lists->addListMember('d79e35e326',[
+        'email_address'=>request('email'),
+        'status'=>'subscribed'
+    ]);
+}
+catch(\Exception $e){
+throw \Illuminate\Validation\ValidationException::withMessages([
+    'email'=>' This Email Cannot be added'
+]);
+}
+
+return redirect('/')->with('success','You Are new Signed up for news letter');
+});
+
 Route::get('/',[PostController::class, 'index'])->name("home");
 
 Route::get('posts/{post:slug}',[PostController::class , 'show']);
@@ -28,3 +53,6 @@ Route::post('logout', [SessionsController::class,'destroy'])->middleware('auth')
 Route::get('login', [SessionsController::class,'create'])->middleware('guest');
 Route::post('login', [SessionsController::class,'store'])->middleware('guest');
 
+Route::get('admin/posts/create',[
+PostController::class,'create'
+])->middleware('admin');
